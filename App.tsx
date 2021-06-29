@@ -1,4 +1,11 @@
 import "react-native-gesture-handler";
+import {
+  ApolloClient,
+  InMemoryCache,
+  ApolloProvider,
+  useQuery,
+  gql,
+} from "@apollo/client";
 import React from "react";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import { ThemeProvider } from "styled-components";
@@ -7,6 +14,25 @@ import { Navigation } from "./components/Navigation";
 import { useCachedResources } from "./hooks/useCachedResources";
 import { LoadingScreen } from "./screens/Loading.screen";
 import { theme } from "./theme";
+
+const client = new ApolloClient({
+  uri: "https://sg-ants-server.herokuapp.com/graphql",
+  cache: new InMemoryCache(),
+});
+client
+  .query({
+    query: gql`
+      query GetRates {
+        ants {
+          name
+          length
+          color
+          weight
+        }
+      }
+    `,
+  })
+  .then((result) => console.log(result));
 
 export default function App() {
   const fontsLoaded = useCachedResources();
@@ -18,7 +44,9 @@ export default function App() {
   return (
     <SafeAreaProvider>
       <ThemeProvider theme={theme}>
-        <Navigation />
+        <ApolloProvider client={client}>
+          <Navigation />
+        </ApolloProvider>
       </ThemeProvider>
     </SafeAreaProvider>
   );

@@ -3,11 +3,29 @@ import { createStackNavigator } from "@react-navigation/stack";
 import React from "react";
 
 import { HomeScreen } from "../screens/Home.screen";
-import { SettingsScreen } from "../screens/Settings.screen";
-
+import { SignInScreen } from "../screens/SignIn.screen";
+import { useAuthStore } from "../stores/auth.store";
+import { Layout } from "./Layout.component";
+import { Display } from "./Typography.component";
 const AppStack = createStackNavigator();
 
 export const Navigation: React.FC = () => {
+  const { loading, token, initialAuth } = useAuthStore();
+
+  React.useEffect(() => {
+    initialAuth();
+  }, []);
+
+  if (loading) {
+    return (
+      <Layout.ScreenContainer bg="white">
+        <Layout.Column grow center>
+          <Display size="l-24">Loading...</Display>
+        </Layout.Column>
+      </Layout.ScreenContainer>
+    );
+  }
+
   return (
     <NavigationContainer>
       <AppStack.Navigator
@@ -15,8 +33,13 @@ export const Navigation: React.FC = () => {
           headerShown: false,
         }}
       >
-        <AppStack.Screen name="Home" component={HomeScreen} />
-        <AppStack.Screen name="Settings" component={SettingsScreen} />
+        {!token ? (
+          <AppStack.Screen name="Signin" component={SignInScreen} />
+        ) : (
+          <>
+            <AppStack.Screen name="Home" component={HomeScreen} />
+          </>
+        )}
       </AppStack.Navigator>
     </NavigationContainer>
   );

@@ -1,6 +1,6 @@
-import "react-native-gesture-handler";
 import { ApolloClient, InMemoryCache, ApolloProvider } from "@apollo/client";
 import React from "react";
+import "react-native-gesture-handler";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import { ThemeProvider } from "styled-components";
 

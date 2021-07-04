@@ -1,9 +1,6 @@
 import React from "react";
 
-import {
-  sortAntByScore,
-  winLikelyHood,
-} from "../lib/generateAntWinLikelihoodCalculator";
+import { exists, sortAndOrderAntScores, winLikelyHood } from "../lib/index";
 import { Ant, useAntsQuery } from "../src/generated/graphql";
 
 export type AntWithScore = Ant & {
@@ -11,36 +8,49 @@ export type AntWithScore = Ant & {
 };
 
 export function useAnts() {
-  const { data } = useAntsQuery();
+  const { data, loading } = useAntsQuery();
   const [ants, setAnts] = React.useState<AntWithScore[]>([]);
+  const [loadingScores, setLoadingScores] = React.useState(false);
 
   React.useEffect(() => {
     const response = data?.ants
-      // There's a bug in the API.
       // If you're getting a response, you shouldn't get [Ant, null, Ant]
       // The client expects [Ant, Ant, Ant]
-      .filter((ant) => !!ant)
+      // There should be a filter on the backend to prevent client side filtering.
+      .filter(exists)
       .map((ant) => ({ ...ant, score: "not yet run" })) as AntWithScore[];
 
     setAnts(response);
   }, [data?.ants]);
 
   const getScores = React.useCallback(() => {
-    ants.forEach(getScore);
-  }, []);
+    const scores: Promise<void>[] = [];
+    setLoadingScores(true);
+    ants.forEach((ant, index) => {
+      scores.push(getSortedAntScoreAsync(ant, index));
+    });
 
-  const getScore = async (ant: AntWithScore) => {
-    const index = ants.findIndex((a) => a.name === ant.name);
+    Promise.all(scores).then(() => {
+      setLoadingScores(false);
+    });
+  }, [ants]);
+
+  const getSortedAntScoreAsync = async (
+    ant: AntWithScore,
+    index: number
+  ): Promise<void> => {
     ants[index] = { ...ant, score: "in progress" };
     setAnts(ants);
 
-    ants[index] = { ...ant, score: await winLikelyHood() };
+    const winScore = await winLikelyHood();
 
-    const withScore = ants.filter((ant) => typeof ant.score === "number");
-    const withoutScore = ants.filter((ant) => typeof ant.score === "string");
+    // Values could have changed since value was awaited.
+    // get updated index to set correct score on ant.
+    const sortedIndex = ants.findIndex((a) => a.name === ant.name);
+    ants[sortedIndex] = { ...ant, score: winScore };
 
-    setAnts([...withScore.sort(sortAntByScore), ...withoutScore]);
+    setAnts(sortAndOrderAntScores(ants));
   };
 
-  return { ants, getScores };
+  return { ants, getScores, loadingAnts: loading, loadingScores };
 }

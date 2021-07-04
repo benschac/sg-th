@@ -1,0 +1,8 @@
+query Ants {
+  ants {
+    name
+    length
+    color
+    weight
+  }
+}

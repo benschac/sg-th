@@ -18,20 +18,6 @@ const client = new ApolloClient({
   uri: "https://sg-ants-server.herokuapp.com/graphql",
   cache: new InMemoryCache(),
 });
-client
-  .query({
-    query: gql`
-      query GetRates {
-        ants {
-          name
-          length
-          color
-          weight
-        }
-      }
-    `,
-  })
-  .then((result) => console.log(result));
 
 export default function App() {
   const fontsLoaded = useCachedResources();

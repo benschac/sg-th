@@ -12,9 +12,11 @@ export const SignInScreen: React.FC = () => {
 
   return (
     <Layout.ScreenContainer grow center bg="white">
-      <Layout.Column px="xxl-48">
+      <Layout.Column style={{ width: 300 }}>
         <Layout.Row>
           <Input
+            grow
+            center
             size="xxl-48"
             placeholder="Username"
             value={username}
@@ -23,6 +25,8 @@ export const SignInScreen: React.FC = () => {
         </Layout.Row>
         <Layout.Row py>
           <Input
+            grow
+            center
             size="xxl-48"
             placeholder="Password"
             value={password}

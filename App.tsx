@@ -1,12 +1,12 @@
 import { ApolloClient, InMemoryCache, ApolloProvider } from "@apollo/client";
 import React from "react";
+import { Text } from "react-native";
 import "react-native-gesture-handler";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import { ThemeProvider } from "styled-components";
 
 import { Navigation } from "./components/Navigation";
 import { useCachedResources } from "./hooks/useCachedResources";
-import { LoadingScreen } from "./screens/Loading.screen";
 import { theme } from "./theme";
 
 const client = new ApolloClient({
@@ -18,7 +18,18 @@ export default function App() {
   const fontsLoaded = useCachedResources();
 
   if (fontsLoaded) {
-    return <LoadingScreen screen="app" />;
+    // If app hasn't loaded font's yet
+    // use default
+    return (
+      <Text
+        style={{
+          fontSize: 18,
+          fontWeight: "500",
+        }}
+      >
+        Loading...
+      </Text>
+    );
   }
 
   return (

@@ -8,7 +8,7 @@ import { useAuthStore } from "../stores/auth.store";
 export const SignInScreen: React.FC = () => {
   const [username, setUsername] = React.useState("");
   const [password, setPassword] = React.useState("");
-  const { signIn } = useAuthStore();
+  const signIn = useAuthStore(React.useCallback((state) => state.signIn, []));
 
   return (
     <Layout.ScreenContainer grow center bg="white">

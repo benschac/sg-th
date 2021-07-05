@@ -36,9 +36,7 @@ export const Navigation: React.FC = () => {
         {!token ? (
           <AppStack.Screen name="Signin" component={SignInScreen} />
         ) : (
-          <>
-            <AppStack.Screen name="Home" component={HomeScreen} />
-          </>
+          <AppStack.Screen name="Home" component={HomeScreen} />
         )}
       </AppStack.Navigator>
     </NavigationContainer>

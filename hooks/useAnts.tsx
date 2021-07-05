@@ -1,7 +1,7 @@
 import React from "react";
 
+import { Ant, useAntsQuery } from "../generated/graphql";
 import { exists, sortAndOrderAntScores, winLikelyHood } from "../lib/index";
-import { Ant, useAntsQuery } from "../src/generated/graphql";
 
 export type AntWithScore = Ant & {
   score: "not yet run" | "in progress" | number;

@@ -8,6 +8,7 @@ import { Spacer } from "../components/Spacer.component";
 import { Display, Text } from "../components/Typography.component";
 import { useAnts } from "../hooks/useAnts";
 import { useAuthStore } from "../stores/auth.store";
+import { LoadingScreen } from "./Loading.screen";
 
 export const HomeScreen: React.FC = () => {
   const { ants, getScores, loadingAnts, loadingScores } = useAnts();
@@ -32,9 +33,7 @@ export const HomeScreen: React.FC = () => {
   if (loadingAnts) {
     return (
       <Layout.ScreenContainer bg="white" grow>
-        <Layout.Column grow center>
-          <Display size="xl-28">Loading...</Display>
-        </Layout.Column>
+        <LoadingScreen screen="Home Screen" />
       </Layout.ScreenContainer>
     );
   }
@@ -56,7 +55,7 @@ export const HomeScreen: React.FC = () => {
             translateY: -100,
           }}
         >
-          <Layout.Row py px justify center>
+          <Layout.Row py px center>
             <Display color="grey" size="l-24">
               Ants
             </Display>
@@ -110,7 +109,7 @@ export const HomeScreen: React.FC = () => {
               </Layout.Column>
             </MotiView>
           );
-        }) ?? []}
+        })}
       </Layout.Column>
       <Layout.Row absolute={{ bottom: 0, left: 0, right: 0 }}>
         {antAnimation}

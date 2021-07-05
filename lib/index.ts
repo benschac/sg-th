@@ -18,6 +18,7 @@ export const winLikelyHood = () => {
   });
 };
 
+// Come back to this
 export function exists<T>(value: T | null | undefined): value is T {
   return value === (value ?? !value);
 }

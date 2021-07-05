@@ -24,7 +24,7 @@ export const HomeScreen: React.FC = () => {
       <>
         <AnimatedAnt delay={100} duration={3400} />
         <AnimatedAnt delay={110} duration={3500} />
-        <AnimatedAnt delay={125} duration={3400} />
+        <AnimatedAnt delay={115} duration={3400} />
       </>
     ),
     []

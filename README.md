@@ -1,3 +1,8 @@
+![Screen Recording 2021-07-05 at 08 56 21 AM](https://user-images.githubusercontent.com/86967434/124478932-b30ec800-dd73-11eb-84ce-a9c113842fe7.gif)
+![Screen Recording 2021-07-05 at 08 57 06 AM](https://user-images.githubusercontent.com/86967434/124478940-b609b880-dd73-11eb-9ba0-88427b784b21.gif)
+![Screen Recording 2021-07-05 at 08 57 39 AM](https://user-images.githubusercontent.com/86967434/124478950-b7d37c00-dd73-11eb-9c86-20b273c6b5e9.gif)
+
+
 I boot-strapped the application with a starter using tools I use at work. Turbo-props is an open-source wrapper around styled-components we use in our day-to-day. Most of the setup was already done, so I could focus on coding.
 
 - Code generation: A bit of overkill for something this small. Reading the introspection layer and getting a type-safe API response removes a whole crop of bugs and enforces consistency with their generated hooks.

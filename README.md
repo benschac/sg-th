@@ -2,6 +2,9 @@
 ![Screen Recording 2021-07-05 at 08 57 06 AM](https://user-images.githubusercontent.com/86967434/124478940-b609b880-dd73-11eb-9ba0-88427b784b21.gif)
 ![Screen Recording 2021-07-05 at 08 57 39 AM](https://user-images.githubusercontent.com/86967434/124478950-b7d37c00-dd73-11eb-9c86-20b273c6b5e9.gif)
 
+### Run the project
+
+`yarn && yarn start`
 
 I boot-strapped the application with a starter using tools I use at work. Turbo-props is an open-source wrapper around styled-components we use in our day-to-day. Most of the setup was already done, so I could focus on coding.
 

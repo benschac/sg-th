@@ -4,7 +4,8 @@ import { Ant, useAntsQuery } from "../generated/graphql";
 import { exists, sortAndOrderAntScores, winLikelyHood } from "../lib/index";
 
 export type AntWithScore = Ant & {
-  score: "not yet run" | "in progress" | number;
+  score?: number;
+  status: "not yet run" | "in progress" | "finished";
 };
 
 export function useAnts() {
@@ -13,44 +14,55 @@ export function useAnts() {
   const [loadingScores, setLoadingScores] = React.useState(false);
 
   React.useEffect(() => {
-    const response = data?.ants
-      // If you're getting a response, you shouldn't get [Ant, null, Ant]
-      // The client expects [Ant, Ant, Ant]
-      // There should be a filter on the backend to prevent client side filtering.
-      .filter(exists)
-      .map((ant) => ({ ...ant, score: "not yet run" })) as AntWithScore[];
+    const response =
+      data?.ants
+        // If you're getting a response, you shouldn't get [Ant, null, Ant]
+        // The client expects [Ant, Ant, Ant]
+        // There should be a filter on the backend to prevent client side filtering.
+        .filter(exists)
+        .map((ant) => ({ ...ant, status: "not yet run" } as const)) ?? [];
 
     setAnts(response);
   }, [data?.ants]);
 
-  const getScores = React.useCallback(() => {
-    const scores: Promise<void>[] = [];
+  const getScores = React.useCallback(async () => {
     setLoadingScores(true);
-    ants.forEach((ant, index) => {
-      scores.push(getSortedAntScoreAsync(ant, index));
-    });
+    setAnts((prev) => prev.map((a) => ({ ...a, status: "in progress" })));
 
-    Promise.all(scores).then(() => {
-      setLoadingScores(false);
+    // Would you get stale ants?
+    const scorePromisees = ants.map(async (ant) => {
+      const score = await getAndSortScoreAsync(ant);
+      return {
+        ...ant,
+        status: "finished",
+        score,
+      } as const;
     });
+    const scores = await Promise.all(scorePromisees);
+    setAnts(scores);
+
+    setLoadingScores(false);
   }, [ants]);
 
-  const getSortedAntScoreAsync = async (
-    ant: AntWithScore,
-    index: number
-  ): Promise<void> => {
-    ants[index] = { ...ant, score: "in progress" };
-    setAnts(ants);
-
+  const getAndSortScoreAsync = async (ant: AntWithScore): Promise<number> => {
     const winScore = await winLikelyHood();
 
-    // Values could have changed since value was awaited.
-    // get updated index to set correct score on ant.
-    const sortedIndex = ants.findIndex((a) => a.name === ant.name);
-    ants[sortedIndex] = { ...ant, score: winScore };
+    setAnts((prevAnts) => {
+      // Make sure we're not mutating state.
+      // Ever.
+      return sortAndOrderAntScores([
+        ...prevAnts.filter((a) => a.name !== ant.name),
+        { ...ant, score: winScore },
+      ]);
+    });
 
-    setAnts(sortAndOrderAntScores(ants));
+    return winScore;
   };
 
-  return { ants, getScores, loadingAnts: loading, loadingScores };
+  return {
+    ants,
+    getScores: loadingScores ? undefined : getScores,
+    loadingAnts: loading,
+    loadingScores,
+  };
 }

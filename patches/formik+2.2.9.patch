@@ -1,0 +1,20 @@
+diff --git a/node_modules/formik/dist/types.d.ts b/node_modules/formik/dist/types.d.ts
+index 9630a4f..0716c70 100644
+--- a/node_modules/formik/dist/types.d.ts
++++ b/node_modules/formik/dist/types.d.ts
+@@ -1,4 +1,6 @@
+ import * as React from 'react';
++import { GestureResponderEvent } from 'react-native';
++
+ /**
+  * Values of fields in the form
+  */
+@@ -90,7 +92,7 @@ export interface FormikHelpers<Values> {
+  */
+ export interface FormikHandlers {
+     /** Form submit handler */
+-    handleSubmit: (e?: React.FormEvent<HTMLFormElement>) => void;
++    handleSubmit: (e?: React.FormEvent<HTMLFormElement> | GestureResponderEvent) => void;
+     /** Reset form event handler  */
+     handleReset: (e?: React.SyntheticEvent<any>) => void;
+     handleBlur: {

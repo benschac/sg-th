@@ -5,6 +5,7 @@ import "react-native-gesture-handler";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import { ThemeProvider } from "styled-components";
 
+import { ErrorBoundary } from "./components/ErrorBoundry.component";
 import { Navigation } from "./components/Navigation";
 import { useCachedResources } from "./hooks/useCachedResources";
 import { theme } from "./theme";
@@ -33,12 +34,14 @@ export default function App() {
   }
 
   return (
-    <SafeAreaProvider>
-      <ThemeProvider theme={theme}>
-        <ApolloProvider client={client}>
-          <Navigation />
-        </ApolloProvider>
-      </ThemeProvider>
-    </SafeAreaProvider>
+    <ErrorBoundary>
+      <SafeAreaProvider>
+        <ThemeProvider theme={theme}>
+          <ApolloProvider client={client}>
+            <Navigation />
+          </ApolloProvider>
+        </ThemeProvider>
+      </SafeAreaProvider>
+    </ErrorBoundary>
   );
 }

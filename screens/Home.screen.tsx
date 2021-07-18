@@ -77,6 +77,10 @@ export const HomeScreen: React.FC = () => {
         >
           <FlatList
             data={ants}
+            showsVerticalScrollIndicator={false}
+            contentContainerStyle={{
+              paddingBottom: 300,
+            }}
             keyExtractor={(item) => item.name}
             renderItem={({ item: ant }) => (
               <Layout.Column py="s-10" align>
@@ -92,16 +96,17 @@ export const HomeScreen: React.FC = () => {
                   </Layout.Row>
                 </Layout.Row>
                 <Layout.Row>
-                  <Display>
-                    score:{" "}
-                    {typeof ant?.score === "object" ? "in progress" : ant.score}
-                  </Display>
+                  <Display>status: {ant.status}</Display>
+                </Layout.Row>
+                <Layout.Row>
+                  <Display>score: {ant?.score ?? "N/A"}</Display>
                 </Layout.Row>
               </Layout.Column>
             )}
           />
         </MotiView>
       </Layout.Column>
+      <Layout.Column grow />
     </Layout.ScreenContainer>
   );
 };
